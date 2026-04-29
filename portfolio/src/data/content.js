@@ -1,0 +1,146 @@
+// ============================================================
+// PORTFOLIO CONTENT — Passe diese Datei an deine Infos an!
+// ============================================================
+
+export const ASCII_ART = `
+ ██╗     ██╗   ██╗██╗███████╗
+ ██║     ██║   ██║██║██╔════╝
+ ██║     ██║   ██║██║███████╗
+ ██║     ██║   ██║██║╚════██║
+ ███████╗╚██████╔╝██║███████║
+ ╚══════╝ ╚═════╝ ╚═╝╚══════╝
+`;
+
+export const WELCOME_MESSAGE = [
+  { text: ASCII_ART, color: 'green' },
+  { text: '' },
+  { text: 'Welcome to my portfolio terminal.', color: 'text' },
+  { text: "Type 'help' to see available commands.", color: 'dim' },
+  { text: '' },
+];
+
+export const ABOUT = [
+  { text: '┌─────────────────────────────────────┐', color: 'blue' },
+  { text: '│           ABOUT ME                  │', color: 'blue' },
+  { text: '└─────────────────────────────────────┘', color: 'blue' },
+  { text: '' },
+  { text: '  Name:      Luis Gaertner', color: 'text' },
+  { text: '  Location:  Germany', color: 'text' },
+  { text: '  Focus:     Full-Stack Development', color: 'text' },
+  { text: '' },
+  { text: '  I build things for the web and beyond.', color: 'dim' },
+  { text: '  Passionate about clean code, open source,', color: 'dim' },
+  { text: '  and creating tools that make life easier.', color: 'dim' },
+  { text: '' },
+];
+
+export const PROJECTS = [
+  { text: '┌─────────────────────────────────────┐', color: 'purple' },
+  { text: '│           PROJECTS                  │', color: 'purple' },
+  { text: '└─────────────────────────────────────┘', color: 'purple' },
+  { text: '' },
+  {
+    text: '  [01]  Project Alpha',
+    color: 'green',
+  },
+  { text: '        A brief description of this project.', color: 'dim' },
+  { text: '        Stack: React, Node.js, PostgreSQL', color: 'cyan' },
+  {
+    text: '        → https://github.com/luisgaertner/project-alpha',
+    color: 'blue',
+    link: 'https://github.com/luisgaertner/project-alpha',
+  },
+  { text: '' },
+  {
+    text: '  [02]  Project Beta',
+    color: 'green',
+  },
+  { text: '        Another cool thing I built.', color: 'dim' },
+  { text: '        Stack: Python, FastAPI, Docker', color: 'cyan' },
+  {
+    text: '        → https://github.com/luisgaertner/project-beta',
+    color: 'blue',
+    link: 'https://github.com/luisgaertner/project-beta',
+  },
+  { text: '' },
+  {
+    text: '  [03]  Project Gamma',
+    color: 'green',
+  },
+  { text: '        Something else entirely.', color: 'dim' },
+  { text: '        Stack: Rust, WebAssembly', color: 'cyan' },
+  {
+    text: '        → https://github.com/luisgaertner/project-gamma',
+    color: 'blue',
+    link: 'https://github.com/luisgaertner/project-gamma',
+  },
+  { text: '' },
+  { text: "  Tip: Click a link or type 'open <number>' to visit.", color: 'dim' },
+  { text: '' },
+];
+
+export const SKILLS = [
+  { text: '┌─────────────────────────────────────┐', color: 'yellow' },
+  { text: '│           SKILLS                    │', color: 'yellow' },
+  { text: '└─────────────────────────────────────┘', color: 'yellow' },
+  { text: '' },
+  { text: '  Languages', color: 'green' },
+  { text: '  ─────────', color: 'dim' },
+  { text: '  JavaScript  ████████████████████  95%', color: 'text' },
+  { text: '  TypeScript  ██████████████████░░  90%', color: 'text' },
+  { text: '  Python      ████████████████░░░░  80%', color: 'text' },
+  { text: '  Rust        ██████████░░░░░░░░░░  50%', color: 'text' },
+  { text: '' },
+  { text: '  Frameworks & Tools', color: 'green' },
+  { text: '  ──────────────────', color: 'dim' },
+  { text: '  React, Next.js, Node.js, Express', color: 'text' },
+  { text: '  Docker, Git, CI/CD, Linux', color: 'text' },
+  { text: '  PostgreSQL, MongoDB, Redis', color: 'text' },
+  { text: '' },
+];
+
+export const CONTACT = [
+  { text: '┌─────────────────────────────────────┐', color: 'red' },
+  { text: '│           CONTACT                   │', color: 'red' },
+  { text: '└─────────────────────────────────────┘', color: 'red' },
+  { text: '' },
+  {
+    text: '  Email:    luisgaertner@icloud.com',
+    color: 'text',
+    link: 'mailto:luisgaertner@icloud.com',
+  },
+  {
+    text: '  GitHub:   github.com/luisgaertner',
+    color: 'text',
+    link: 'https://github.com/luisgaertner',
+  },
+  {
+    text: '  LinkedIn: linkedin.com/in/luisgaertner',
+    color: 'text',
+    link: 'https://linkedin.com/in/luisgaertner',
+  },
+  { text: '' },
+  { text: "  Feel free to reach out — I don't byte.", color: 'dim' },
+  { text: '' },
+];
+
+export const HELP = [
+  { text: '' },
+  { text: '  Available commands:', color: 'yellow' },
+  { text: '' },
+  { text: '  about       Who I am', color: 'green' },
+  { text: '  projects    Things I\'ve built', color: 'green' },
+  { text: '  skills      My tech stack', color: 'green' },
+  { text: '  contact     Get in touch', color: 'green' },
+  { text: '  clear       Clear the terminal', color: 'green' },
+  { text: '  help        Show this message', color: 'green' },
+  { text: '' },
+  { text: '  You can also click on the commands above.', color: 'dim' },
+  { text: '' },
+];
+
+export const PROJECT_LINKS = [
+  'https://github.com/luisgaertner/project-alpha',
+  'https://github.com/luisgaertner/project-beta',
+  'https://github.com/luisgaertner/project-gamma',
+];
