@@ -8,6 +8,7 @@ import {
   HELP,
   PROJECT_LINKS,
 } from '../data/content';
+import AsciiLogo from './AsciiLogo';
 import './Terminal.css';
 
 const COLOR_MAP = {
@@ -75,9 +76,6 @@ function TerminalLine({ line, animated, onDone }) {
     );
   }
 
-  // Check if the line contains a clickable command
-  const isPreLine = line.text && line.text.includes('██') || line.text?.includes('┌') || line.text?.includes('└') || line.text?.includes('│');
-
   return (
     <div className="terminal-line" style={{ whiteSpace: 'pre' }}>
       <span style={{ color }}>{displayText}</span>
@@ -87,10 +85,9 @@ function TerminalLine({ line, animated, onDone }) {
 }
 
 export default function Terminal() {
+  const [phase, setPhase] = useState('logo'); // 'logo' | 'welcome' | 'ready'
   const [history, setHistory] = useState([]);
   const [input, setInput] = useState('');
-  const [isAnimating, setIsAnimating] = useState(true);
-  const [showWelcome, setShowWelcome] = useState(true);
   const [welcomeIndex, setWelcomeIndex] = useState(0);
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
@@ -101,14 +98,13 @@ export default function Terminal() {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [history, welcomeIndex, input]);
+  }, [history, welcomeIndex, input, phase]);
 
-  // Welcome animation
+  // Welcome text animation (after logo finishes)
   useEffect(() => {
-    if (!showWelcome) return;
+    if (phase !== 'welcome') return;
     if (welcomeIndex >= WELCOME_MESSAGE.length) {
-      setShowWelcome(false);
-      setIsAnimating(false);
+      setPhase('ready');
       return;
     }
     const line = WELCOME_MESSAGE[welcomeIndex];
@@ -118,12 +114,16 @@ export default function Terminal() {
       setWelcomeIndex((i) => i + 1);
     }, delay);
     return () => clearTimeout(timer);
-  }, [welcomeIndex, showWelcome]);
+  }, [welcomeIndex, phase]);
+
+  const handleLogoDone = useCallback(() => {
+    setPhase('welcome');
+  }, []);
 
   // Focus input on click
   const handleTerminalClick = useCallback(() => {
-    if (!isAnimating) inputRef.current?.focus();
-  }, [isAnimating]);
+    if (phase === 'ready') inputRef.current?.focus();
+  }, [phase]);
 
   const processCommand = useCallback((cmd) => {
     const trimmed = cmd.trim().toLowerCase();
@@ -205,13 +205,15 @@ export default function Terminal() {
 
       {/* Terminal Body */}
       <div className="terminal-body" ref={scrollRef} onClick={handleTerminalClick}>
-        {/* Output Lines */}
-        {history.map((line, i) => (
-          <TerminalLine key={i} line={line} />
-        ))}
+        {/* Animated Logo Intro */}
+        {phase === 'logo' && <AsciiLogo onDone={handleLogoDone} />}
+
+        {/* Output Lines (shown after logo) */}
+        {phase !== 'logo' &&
+          history.map((line, i) => <TerminalLine key={i} line={line} />)}
 
         {/* Input Line */}
-        {!isAnimating && (
+        {phase === 'ready' && (
           <div className="terminal-input-line">
             <span className="prompt">visitor@luis ~ $&nbsp;</span>
             <div className="input-wrapper">
@@ -233,7 +235,7 @@ export default function Terminal() {
         )}
 
         {/* Command Suggestions */}
-        {!isAnimating && (
+        {phase === 'ready' && (
           <div className="command-suggestions">
             {COMMAND_SUGGESTIONS.map((cmd) => (
               <button
