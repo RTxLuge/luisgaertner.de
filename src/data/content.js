@@ -33,44 +33,47 @@ export const ABOUT = [
 ];
 
 export const PROJECTS = [
-  { text: '┌─────────────────────────────────────┐', color: 'purple' },
-  { text: '│           PROJECTS                  │', color: 'purple' },
-  { text: '└─────────────────────────────────────┘', color: 'purple' },
+  { text: '┌─────────────────────────────────────────────┐', color: 'purple' },
+  { text: '│              PROJECTS                       │', color: 'purple' },
+  { text: '└─────────────────────────────────────────────┘', color: 'purple' },
   { text: '' },
   {
-    text: '  [01]  Project Alpha',
+    text: '  [01]  Speachy',
     color: 'green',
   },
-  { text: '        A brief description of this project.', color: 'dim' },
-  { text: '        Stack: React, Node.js, PostgreSQL', color: 'cyan' },
+  { text: '        macOS menubar speech-to-text app using', color: 'dim' },
+  { text: '        OpenAI Whisper API with formal rewriting mode.', color: 'dim' },
+  { text: '        Stack: Swift, Whisper API', color: 'cyan' },
   {
-    text: '        → https://github.com/luisgaertner/project-alpha',
+    text: '        → https://github.com/RTxLuge/Speachy',
     color: 'blue',
-    link: 'https://github.com/luisgaertner/project-alpha',
-  },
-  { text: '' },
-  {
-    text: '  [02]  Project Beta',
-    color: 'green',
-  },
-  { text: '        Another cool thing I built.', color: 'dim' },
-  { text: '        Stack: Python, FastAPI, Docker', color: 'cyan' },
-  {
-    text: '        → https://github.com/luisgaertner/project-beta',
-    color: 'blue',
-    link: 'https://github.com/luisgaertner/project-beta',
+    link: 'https://github.com/RTxLuge/Speachy',
   },
   { text: '' },
   {
-    text: '  [03]  Project Gamma',
+    text: '  [02]  SpeachyiOS',
     color: 'green',
   },
-  { text: '        Something else entirely.', color: 'dim' },
-  { text: '        Stack: Rust, WebAssembly', color: 'cyan' },
+  { text: '        Speachy on iOS — mobile companion app', color: 'dim' },
+  { text: '        for speech-to-text on the go.', color: 'dim' },
+  { text: '        Stack: Swift, iOS', color: 'cyan' },
   {
-    text: '        → https://github.com/luisgaertner/project-gamma',
+    text: '        → https://github.com/RTxLuge/SpeachyiOS',
     color: 'blue',
-    link: 'https://github.com/luisgaertner/project-gamma',
+    link: 'https://github.com/RTxLuge/SpeachyiOS',
+  },
+  { text: '' },
+  {
+    text: '  [03]  luisgaertner.de',
+    color: 'green',
+  },
+  { text: '        This website — a terminal-style', color: 'dim' },
+  { text: '        portfolio built with React & Vite.', color: 'dim' },
+  { text: '        Stack: React, Vite, GitHub Pages', color: 'cyan' },
+  {
+    text: '        → https://github.com/RTxLuge/luisgaertner.de',
+    color: 'blue',
+    link: 'https://github.com/RTxLuge/luisgaertner.de',
   },
   { text: '' },
   { text: "  Tip: Click a link or type 'open <number>' to visit.", color: 'dim' },
@@ -108,9 +111,9 @@ export const CONTACT = [
     link: 'mailto:luisgaertner@icloud.com',
   },
   {
-    text: '  GitHub:   github.com/luisgaertner',
+    text: '  GitHub:   github.com/RTxLuge',
     color: 'text',
-    link: 'https://github.com/luisgaertner',
+    link: 'https://github.com/RTxLuge',
   },
   {
     text: '  LinkedIn: linkedin.com/in/luisgaertner',
@@ -138,7 +141,7 @@ export const HELP = [
 ];
 
 export const PROJECT_LINKS = [
-  'https://github.com/luisgaertner/project-alpha',
-  'https://github.com/luisgaertner/project-beta',
-  'https://github.com/luisgaertner/project-gamma',
+  'https://github.com/RTxLuge/Speachy',
+  'https://github.com/RTxLuge/SpeachyiOS',
+  'https://github.com/RTxLuge/luisgaertner.de',
 ];
