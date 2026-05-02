@@ -4,9 +4,9 @@
 
 .terminal-window {
   width: 100%;
-  max-width: 820px;
+  max-width: 1100px;
   height: calc(100vh - 40px);
-  max-height: 700px;
+  max-height: 800px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow:
@@ -103,6 +103,17 @@
 .terminal-link:hover {
   opacity: 0.7;
   text-decoration: underline !important;
+}
+
+.terminal-command-line {
+  transition: background 0.15s;
+  border-radius: 3px;
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+
+.terminal-command-line:hover {
+  background: rgba(158, 206, 106, 0.08);
 }
 
 .typing-cursor {

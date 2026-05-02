@@ -33,7 +33,7 @@ const COMMANDS = {
 
 const COMMAND_SUGGESTIONS = ['about', 'projects', 'skills', 'contact', 'help'];
 
-function TerminalLine({ line, animated, onDone }) {
+function TerminalLine({ line, animated, onDone, onCommand }) {
   const [displayText, setDisplayText] = useState(animated ? '' : line.text);
   const [done, setDone] = useState(!animated);
 
@@ -72,6 +72,32 @@ function TerminalLine({ line, animated, onDone }) {
           {displayText}
         </a>
         {animated && !done && <span className="typing-cursor">▊</span>}
+      </div>
+    );
+  }
+
+  if (line.command) {
+    return (
+      <div
+        className="terminal-line terminal-command-line"
+        style={{ whiteSpace: 'pre', cursor: 'pointer' }}
+        onClick={() => onCommand?.(line.command)}
+      >
+        <span style={{ color }}>{displayText}</span>
+        {animated && !done && <span className="typing-cursor">▊</span>}
+      </div>
+    );
+  }
+
+  // Multi-segment line (multiple colors on one line)
+  if (line.segments) {
+    return (
+      <div className="terminal-line" style={{ whiteSpace: 'pre' }}>
+        {line.segments.map((seg, idx) => (
+          <span key={idx} style={{ color: COLOR_MAP[seg.color] || COLOR_MAP.text }}>
+            {seg.text}
+          </span>
+        ))}
       </div>
     );
   }
@@ -130,7 +156,7 @@ export default function Terminal() {
     const promptLine = { text: `visitor@luis ~ $ ${cmd}`, color: 'green' };
 
     if (trimmed === 'clear') {
-      setHistory([]);
+      setHistory([...WELCOME_MESSAGE]);
       return;
     }
 
@@ -210,7 +236,9 @@ export default function Terminal() {
 
         {/* Output Lines (shown after logo) */}
         {phase !== 'logo' &&
-          history.map((line, i) => <TerminalLine key={i} line={line} />)}
+          history.map((line, i) => (
+            <TerminalLine key={i} line={line} onCommand={processCommand} />
+          ))}
 
         {/* Input Line */}
         {phase === 'ready' && (
