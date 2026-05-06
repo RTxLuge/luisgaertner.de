@@ -4,9 +4,9 @@
 
 .terminal-window {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1600px;
   height: calc(100vh - 40px);
-  max-height: 800px;
+  max-height: 900px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow:
@@ -65,8 +65,24 @@
   letter-spacing: 0.5px;
 }
 
-.terminal-dots-spacer {
-  width: 56px;
+.lang-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.5px;
+}
+
+.lang-toggle:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: rgba(125, 207, 255, 0.08);
 }
 
 /* ==============================

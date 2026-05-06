@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   WELCOME_MESSAGE,
-  ABOUT,
+  getAbout,
   PROJECTS,
   SKILLS,
   CONTACT,
@@ -23,15 +23,39 @@ const COLOR_MAP = {
   dim: 'var(--text-dim)',
 };
 
-const COMMANDS = {
-  about: ABOUT,
-  projects: PROJECTS,
-  skills: SKILLS,
-  contact: CONTACT,
-  help: HELP,
-};
-
 const COMMAND_SUGGESTIONS = ['about', 'projects', 'skills', 'contact', 'help'];
+
+const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
+function AgeSegment({ seg, textWidth }) {
+  const [phase, setPhase] = useState('loading'); // 'loading' | 'done'
+  const [frame, setFrame] = useState(0);
+
+  useEffect(() => {
+    if (phase !== 'loading') return;
+    const spinner = setInterval(() => {
+      setFrame((f) => (f + 1) % SPINNER_FRAMES.length);
+    }, 80);
+    const done = setTimeout(() => {
+      clearInterval(spinner);
+      setPhase('done');
+    }, 1200);
+    return () => { clearInterval(spinner); clearTimeout(done); };
+  }, [phase]);
+
+  const color = COLOR_MAP[seg.color] || COLOR_MAP.text;
+
+  if (phase === 'loading') {
+    const loadingText = seg.ageLabel + SPINNER_FRAMES[frame];
+    return (
+      <span style={{ color: COLOR_MAP.cyan }}>
+        {loadingText.padEnd(textWidth)}
+      </span>
+    );
+  }
+
+  return <span style={{ color }}>{seg.text}</span>;
+}
 
 function TerminalLine({ line, animated, onDone, onCommand }) {
   const [displayText, setDisplayText] = useState(animated ? '' : line.text);
@@ -93,11 +117,16 @@ function TerminalLine({ line, animated, onDone, onCommand }) {
   if (line.segments) {
     return (
       <div className="terminal-line" style={{ whiteSpace: 'pre' }}>
-        {line.segments.map((seg, idx) => (
-          <span key={idx} style={{ color: COLOR_MAP[seg.color] || COLOR_MAP.text }}>
-            {seg.text}
-          </span>
-        ))}
+        {line.segments.map((seg, idx) => {
+          if (seg.ageValue !== undefined) {
+            return <AgeSegment key={idx} seg={seg} textWidth={seg.text.length} />;
+          }
+          return (
+            <span key={idx} style={{ color: COLOR_MAP[seg.color] || COLOR_MAP.text }}>
+              {seg.text}
+            </span>
+          );
+        })}
       </div>
     );
   }
@@ -115,9 +144,19 @@ export default function Terminal() {
   const [history, setHistory] = useState([]);
   const [input, setInput] = useState('');
   const [welcomeIndex, setWelcomeIndex] = useState(0);
+  const [lang, setLang] = useState('de');
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
   const terminalRef = useRef(null);
+
+  // Build commands map based on current language
+  const getCommands = useCallback((l) => ({
+    about: getAbout(l),
+    projects: PROJECTS[l],
+    skills: SKILLS[l],
+    contact: CONTACT[l],
+    help: HELP[l],
+  }), []);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -129,18 +168,19 @@ export default function Terminal() {
   // Welcome text animation (after logo finishes)
   useEffect(() => {
     if (phase !== 'welcome') return;
-    if (welcomeIndex >= WELCOME_MESSAGE.length) {
+    const welcomeMsg = WELCOME_MESSAGE[lang];
+    if (welcomeIndex >= welcomeMsg.length) {
       setPhase('ready');
       return;
     }
-    const line = WELCOME_MESSAGE[welcomeIndex];
+    const line = welcomeMsg[welcomeIndex];
     const delay = line.text === '' ? 100 : line.color === 'green' ? 50 : 300;
     const timer = setTimeout(() => {
       setHistory((prev) => [...prev, line]);
       setWelcomeIndex((i) => i + 1);
     }, delay);
     return () => clearTimeout(timer);
-  }, [welcomeIndex, phase]);
+  }, [welcomeIndex, phase, lang]);
 
   const handleLogoDone = useCallback(() => {
     setPhase('welcome');
@@ -151,12 +191,64 @@ export default function Terminal() {
     if (phase === 'ready') inputRef.current?.focus();
   }, [phase]);
 
+  // Switch language
+  const switchLang = useCallback((newLang) => {
+    setLang(newLang);
+    const label = newLang === 'de' ? 'Deutsch' : 'English';
+    setHistory((prev) => [
+      ...prev,
+      { text: `  Sprache / Language → ${label}`, color: 'cyan' },
+      { text: '' },
+    ]);
+  }, []);
+
+  const toggleLang = useCallback(() => {
+    const newLang = lang === 'de' ? 'en' : 'de';
+    switchLang(newLang);
+  }, [lang, switchLang]);
+
   const processCommand = useCallback((cmd) => {
     const trimmed = cmd.trim().toLowerCase();
     const promptLine = { text: `visitor@luis ~ $ ${cmd}`, color: 'green' };
 
     if (trimmed === 'clear') {
-      setHistory([...WELCOME_MESSAGE]);
+      setHistory([...WELCOME_MESSAGE[lang]]);
+      return;
+    }
+
+    // Language switch command
+    if (trimmed === 'lang' || trimmed === 'language') {
+      const newLang = lang === 'de' ? 'en' : 'de';
+      setLang(newLang);
+      const label = newLang === 'de' ? 'Deutsch' : 'English';
+      setHistory((prev) => [
+        ...prev,
+        promptLine,
+        { text: `  Sprache / Language → ${label}`, color: 'cyan' },
+        { text: '' },
+      ]);
+      return;
+    }
+
+    if (trimmed === 'lang de' || trimmed === 'language de') {
+      setLang('de');
+      setHistory((prev) => [
+        ...prev,
+        promptLine,
+        { text: '  Sprache → Deutsch', color: 'cyan' },
+        { text: '' },
+      ]);
+      return;
+    }
+
+    if (trimmed === 'lang en' || trimmed === 'language en') {
+      setLang('en');
+      setHistory((prev) => [
+        ...prev,
+        promptLine,
+        { text: '  Language → English', color: 'cyan' },
+        { text: '' },
+      ]);
       return;
     }
 
@@ -174,21 +266,22 @@ export default function Terminal() {
       }
     }
 
-    const output = COMMANDS[trimmed];
+    const commands = getCommands(lang);
+    const output = commands[trimmed];
     if (output) {
       setHistory((prev) => [...prev, promptLine, ...output]);
     } else {
+      const errMsg = lang === 'de'
+        ? `  Befehl nicht gefunden: ${trimmed}. Tippe 'help' für verfügbare Befehle.`
+        : `  Command not found: ${trimmed}. Type 'help' for available commands.`;
       setHistory((prev) => [
         ...prev,
         promptLine,
-        {
-          text: `  Command not found: ${trimmed}. Type 'help' for available commands.`,
-          color: 'red',
-        },
+        { text: errMsg, color: 'red' },
         { text: '' },
       ]);
     }
-  }, []);
+  }, [lang, getCommands]);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -199,7 +292,8 @@ export default function Terminal() {
       // Tab completion
       if (e.key === 'Tab') {
         e.preventDefault();
-        const match = COMMAND_SUGGESTIONS.find((c) =>
+        const allCmds = [...COMMAND_SUGGESTIONS, 'lang'];
+        const match = allCmds.find((c) =>
           c.startsWith(input.toLowerCase())
         );
         if (match) setInput(match);
@@ -226,7 +320,9 @@ export default function Terminal() {
           <span className="dot dot-green" />
         </div>
         <div className="terminal-title">visitor@luis — portfolio</div>
-        <div className="terminal-dots-spacer" />
+        <button className="lang-toggle" onClick={toggleLang}>
+          {lang === 'de' ? 'EN' : 'DE'}
+        </button>
       </div>
 
       {/* Terminal Body */}
