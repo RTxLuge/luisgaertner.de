@@ -381,7 +381,6 @@ export default function Terminal() {
                 autoComplete="off"
                 autoCapitalize="off"
               />
-              <span className="cursor-blink">▊</span>
             </div>
           </div>
         )}

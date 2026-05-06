@@ -171,15 +171,8 @@
   font-family: var(--font-mono);
   font-size: 13px;
   width: 100%;
-  caret-color: transparent;
+  caret-color: var(--green);
   line-height: 1.6;
-}
-
-.cursor-blink {
-  color: var(--green);
-  animation: blink 1s step-end infinite;
-  font-size: 13px;
-  pointer-events: none;
 }
 
 @keyframes blink {
