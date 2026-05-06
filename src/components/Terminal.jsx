@@ -145,6 +145,8 @@ export default function Terminal() {
   const [input, setInput] = useState('');
   const [welcomeIndex, setWelcomeIndex] = useState(0);
   const [lang, setLang] = useState('de');
+  const [cmdHistory, setCmdHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
   const terminalRef = useRef(null);
@@ -286,8 +288,34 @@ export default function Terminal() {
   const handleKeyDown = useCallback(
     (e) => {
       if (e.key === 'Enter' && input.trim()) {
+        setCmdHistory((prev) => [input, ...prev]);
+        setHistoryIndex(-1);
         processCommand(input);
         setInput('');
+      }
+      // Arrow up — previous command
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setCmdHistory((prev) => {
+          const nextIdx = Math.min(historyIndex + 1, prev.length - 1);
+          if (prev.length > 0 && nextIdx >= 0) {
+            setHistoryIndex(nextIdx);
+            setInput(prev[nextIdx]);
+          }
+          return prev;
+        });
+      }
+      // Arrow down — next command (or clear)
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex <= 0) {
+          setHistoryIndex(-1);
+          setInput('');
+        } else {
+          const nextIdx = historyIndex - 1;
+          setHistoryIndex(nextIdx);
+          setInput(cmdHistory[nextIdx]);
+        }
       }
       // Tab completion
       if (e.key === 'Tab') {
@@ -299,7 +327,7 @@ export default function Terminal() {
         if (match) setInput(match);
       }
     },
-    [input, processCommand]
+    [input, processCommand, historyIndex, cmdHistory]
   );
 
   const handleSuggestionClick = useCallback(
